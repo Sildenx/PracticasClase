@@ -1,0 +1,10 @@
+# PracticasClase
+install.packages("XLConnect")
+require (XLConnect)
+wb <-loadWorkbook("C:/Users/SALA-C22/Deskop/practica.xls", create=TRUE ) #Direccion de el archivo en excel por ejemplo
+createSheet(wb, name="SEXO")
+writeWorksheet(wb, tabla1, "SEXO", startRow=1, startCol=2, header=TRUE )
+createWorksheet(wb, name="COND. DE OCUP")
+createWorksheet(wb, tabla2, "COND. DE OCUP", startRow)
+
+
