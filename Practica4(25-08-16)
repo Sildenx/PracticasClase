@@ -6,5 +6,34 @@ createSheet(wb, name="SEXO")
 writeWorksheet(wb, tabla1, "SEXO", startRow=1, startCol=2, header=TRUE )
 createWorksheet(wb, name="COND. DE OCUP")
 createWorksheet(wb, tabla2, "COND. DE OCUP", startRow)
+#--------------------------------------------------------------------------------------------------------------------------
+require (foreign)
+sdemt<-read.dbf("C:\\Users\\SALA-C22\\Desktop\\SDEMT215.dbf")
 
+install.packages("questionr")
+require(questionr)
 
+SDEMT215$ENT <- as.numeric(SDEMT215$ENT)
+
+wtd.table(SDEMT215$POS_OCU,SDEMT215$SEX,SDEMT215$ENT==16)
+
+wtd.table(SDEMT215$POS_OCU,SDEMT215$SEX,SDEMT215$ENT==26)
+
+SDEMT215$SEXO<-factor(SDEMT215$SEX,levels = c(1,2),labels = c("HOMBRE","MUJER"))
+
+class(SDEMT215$POS_OCU)
+
+class(SDEMT215$SEX)
+
+SDEMT215$POS_OCU <- as.factor(SDEMT215$POS_OCU)
+SDEMT215$POS_OCU<-factor(SDEMT215$POS_OCU,levels = c(1,2,3,4,5),labels = c("SUBORDINADOS y REMUNERADOS",
+"EMPLEADORES", "CUENTA PROPIA", "SIN PAGO", "NE"))
+
+wtd.table(SDEMT215$POS_OCU,SDEMT215$SEX,SDEMT215$ENT==16)
+
+wtd.table(SDEMT215$POS_OCU,SDEMT215$SEX,SDEMT215$ENT==26)
+
+ESTADO_1<- subset(SDEMT215,SDEMT215$ENT == 16)
+ESTADO_2 <- subset(SDEMT215,SDEMT215$ENT == 26)
+
+ESTADOS <- subset(estado1,estado1$ENT == "16" | estado2$CD_A == "26" ) 
