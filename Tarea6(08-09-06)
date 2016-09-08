@@ -1,0 +1,35 @@
+# PracticasClase
+################################################# 3 prac 2###############################################
+
+ summary(mod1$coefficients) 
+ # se tiene un ajuste 
+ #La relacion de las dos variables es positiva 
+ #Por cada unidda de ingreso que aumenta el padre o madre , aumenta la estura en .0023
+ #el error estandar residual es .0198 , este valor érmite ,medir la calidad del modelo; asi como realizar intervalos de confianza
+ summary(mod1)
+ # los IC nos permite completar la informacion sobre las estimaciones para evaluar IC se utiliza 
+ confint(mod1, level = .95)
+ #Con una probabilidad de 95%  Bo se encuentra en el intervalo (.8542,1.0105 )
+ # B1 se encuentra en el intervalo (.0017, .0029)
+ 
+ ##################################BONDAD DE AJUSTE###################################################
+ # con la bondad de ajuste verificamos la calidad del modelo al interpretar la variable dependientepara 
+ #eso se utiliza la tabla ANOVA 
+ anova(mod1)
+ 
+# en este caso la variabilidad explicada del modelo es .033022=SSM
+ #se revisa la SSR =.0031
+ #Revisando los valores de summary el estadístico F es mayor a 1 y p- value <.05
+ #Con estas revisiones se puede mencionar que se rechaza 
+ # la hipotesis nula de F=1
+ #y se puede establecer un modelo 
+ 
+ #Revisar R2 múltiple 
+ #alrededor del 91 % de la variabiliadad de la estatura es explicada por la recta ajustada 
+ #####################################SUPUESTOS]#####################################################
+ base1<- data.frame(neco, estaturas)
+ base1$fitted.mod1 <- fitted(mod1)
+ base1$residuals.mod1 <- residuals(mod1)
+ base1$rstudent.mod1 <- rstudent(mod1)
+ 
+ 
