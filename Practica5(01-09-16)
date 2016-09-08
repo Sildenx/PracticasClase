@@ -1,7 +1,7 @@
 # PracticasClase
 estaturas <-c(1.2, 1.23, 1.19, 1.32, 1.28, 1.22, 1.17, 1.29, 1.33, 1.15)
 # Nivel socioeconómico 110, 130, 108, 130, 108, 167, 156, 115, 104, 138, 170, 107
-# QUEREMOS COMPROBAR LA HIPOTESIS QUE ENTRE MAYOR INGRESO DE LA FAMILIA HAY UNA MAYOY ESTATURA EN LOS NIÑOS 
+# QUEREMOS COMPROBAR LA HIPOTESIS QUE ENTRE MAYOR INGRESO DE LA FAMILIA HAY UNA MAYOR ESTATURA EN LOS NIÑOS 
 neco <-c(110, 130, 108, 167, 156, 115, 104, 138, 170, 107)
 plot(neco, estaturas, pch=11, xlab = "estatura", ylab = "ingreso economico ", main ="grafica de dispersion", col=18)
 
