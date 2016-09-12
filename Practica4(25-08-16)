@@ -13,7 +13,7 @@ sdemt<-read.dbf("C:\\Users\\SALA-C22\\Desktop\\SDEMT215.dbf")
 install.packages("questionr")
 require(questionr)
 
-SDEMT215$ENT <- as.numeric(SDEMT215$ENT)
+SDEMT215$ENT <-as.numeric(SDEMT215$ENT)
 
 wtd.table(SDEMT215$POS_OCU,SDEMT215$SEX,SDEMT215$ENT==16)
 
@@ -25,7 +25,7 @@ class(SDEMT215$POS_OCU)
 
 class(SDEMT215$SEX)
 
-SDEMT215$POS_OCU <- as.factor(SDEMT215$POS_OCU)
+SDEMT215$POS_OCU <-as.factor(SDEMT215$POS_OCU)
 SDEMT215$POS_OCU<-factor(SDEMT215$POS_OCU,levels = c(1,2,3,4,5),labels = c("SUBORDINADOS y REMUNERADOS",
 "EMPLEADORES", "CUENTA PROPIA", "SIN PAGO", "NE"))
 
@@ -33,7 +33,7 @@ wtd.table(SDEMT215$POS_OCU,SDEMT215$SEX,SDEMT215$ENT==16)
 
 wtd.table(SDEMT215$POS_OCU,SDEMT215$SEX,SDEMT215$ENT==26)
 
-ESTADO_1<- subset(SDEMT215,SDEMT215$ENT == 16)
-ESTADO_2 <- subset(SDEMT215,SDEMT215$ENT == 26)
+ESTADO_1<-subset(SDEMT215,SDEMT215$ENT == 16)
+ESTADO_2 <-subset(SDEMT215,SDEMT215$ENT == 26)
 
-ESTADOS <- subset(estado1,estado1$ENT == "16" | estado2$CD_A == "26" ) 
+ESTADOS <-subset(estado1,estado1$ENT == "16" | estado2$CD_A == "26" ) 
