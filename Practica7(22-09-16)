@@ -1,0 +1,76 @@
+# PracticasClase
+nstall.packages("car")
+
+ base1 <- data.frame(neco, estaturas)
+ base1$ajuste.mod1 <- fitted(mod1)# Valores ajustados 
+ base1$residuales.mod1 <- residuals(mod1)# Residuos del modelo 
+ base1$rstudent.mod1 <- rstudent(mod1) # Residuos estudentizados
+ 
+ #Esta variable se utilizan para comprobar los supuestos 
+ #supuesto de normalidad .... es que los residuos tengan una distribucion normal 
+ # Para conocer la normalidad se utiliza la prueba de shapiro para analizar los residuos 
+ 
+# ----------------------------PRUEBA DE SHAPIRO TEST--------------------------------------------------------------------------
+ 
+ shapiro.test(base1$rstudent.mod1)
+ #Ho. La muestra tiene una distribucion normal 
+ #Ha. La muestra no tiene uns distribucion normal 
+ # Tenemos un p- value  de .8172 no se rechaza la hipotesis nula 
+ #por lo tanto se aceptra que hay normalidad 
+ # Veremos este resultado en un gráfico 
+ 
+ qqnorm(base1$rstudent.mod1, main= "Normal (0,1)")
+ 
+# Se obtiene el gráfico de dispersion con normal 0,1
+  qqline(base1$rstudent.mod1)
+  
+#Ahoara vamos a comprobar la homegeniedad de varianzas, para esto se necesita una libreria que se llama lmtest 
+  #debido a que se tiene que aplicar la prueba de Breusch - pagan test 
+  
+install.packages("lmtest")
+require (lmtest)
+bptest(mod1)
+
+#En esta prueba esperamos que haya homogeniedad en la varianza 
+#Ho: Si hay homogeniedad en la varianza 
+#Ha: No hay  homogeniedad en la varianza 
+# En la prueba bptest obtenemos un p- value de .6108
+#Por lo tanto no se rechaza la hipotesis nula 
+# Es decir se acepta con 95% de confianza  LA Ho 
+#Para eso tenemos que tener un p- value mayor a .05, por lo que 
+# mod1 se puede decir que hay homogeniedad en la varianza 
+# ------------------------------------------PRUEBA DE AUTOCORRELACION O INDEPENDENCIA---------------------------------------
+# Se utiliza Durbin Watson 
+# Se utiliza 
+require(car)
+dwtest(mod1, alternative = "two.sided")
+
+#Ho: No hay autocorreccion en los residuos 
+#Ha: Si hay ""
+
+
+# La prueba de Durbin genera un resultado de p- value .9142
+#Por lo que no se rechaza la hipótesis nula, ya que,es mayor a .05 , esto queire decir que no hay autocorrelación en los residuos 
+
+
+#-------------------------------------------------------VALOR DE DURBIN WATSON-----------------------------------------------
+#Otra forma de evaluar la prueba de Durbin es con el valor de Durbin Watson que se espera este entre el rango de 1.5 a 2.5 
+# Si esta dentro de este rango, no hay autocorrelación  en los residuos 
+# Conmprobación gráfica 
+plot(base1$residuales.mod1, pch=8, ylab ="residuales", xlab = "in" )
+abline(h=cor(base1$estaturas , base1$neco))
+
+# En este caso puede que ho hay patrón, por lo que, con estos datos se puede garantizar que tenemos un buen modelo y 
+#podamos predecir los coeficientes o analizar los coeficientes.
+
+
+#Tener un problema de rangos si predecimos sin considerar rangos de nuestra varibale por lo que vamos a definir una nueva  base
+#con los limites 
+
+limbase1 <- seq(min(base1$neco), max(base1$neco), length= 10)
+limbase1  <- data.frame(limbase1)
+limbasep <- predict.lm(mod1, limbase1, interval = "prediction", se.fit = TRUE, data=base1)
+# Te generan los limites 
+head(limbasep$fit) 
+#Para dibujar los limites 
+matplot(limbase1, limbasep$fit, type = "l", xlab = "ingreso", ylab = "estatura")
