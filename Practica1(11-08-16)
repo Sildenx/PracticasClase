@@ -1,0 +1,24 @@
+# PracticasClase
+sample(10000, 35)
+
+nombre <-c("sergio", "alan", "betzabeth", "judith", "rodrigo", "eric", "diego", "angel")
+edad <-c(36, 20, 23, 20, 21, 21, 22, 21)
+sexo <-c("hombre", "hombre", "mujer", "mujer", "hombre", "hombre", "hombre", "hombre")
+teduca <-c("publica", "publica", "publica", "publica", "privada", "publica", "publica", "publica")
+
+base1 <- matrix(c(edad, nombre, sexo, teduca))
+base1.1 <- data.frame(nombre, edad, sexo, teduca)
+
+table(base1.1$edad)
+table(base1.1$sexo)
+attach(base1.1)
+table(edad)
+detach(base1.1)
+summary(base1.1$edad)
+
+# exportar base de datos 
+
+install.packages("foreign")
+require(foreign)
+sociodem <-read.dbf("C://Users//SALA-E11//Desktop//sdemt215//SDEMT215.dbf")
+table(sociodem$SEX)
