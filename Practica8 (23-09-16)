@@ -1,0 +1,41 @@
+# PracticasClase
+#-------------------------------------------TRABAJO EN EQUIPO: SDEMT2016--------------------------------------------------------------#
+#Beltrán Arizmendi María; Nava Celis Dennya#
+
+
+#MODELO DE REGRESIÓN LINEAL SIMPLE#
+#Elegir 2 variables: 88(años de escolaridad) y 90(ingreso)
+#Modelo: diagrama de dispersion, correlacion, tabla anova, 4 supuestos, predicción
+
+
+#Mandar llamar la base de datos 
+install.packages("foreign")
+require(foreign)
+sdemt216 <- read.dbf("C://Users//COMPAQ//Documents//sdemt216.dbf")
+
+estado <- subset(sdemt216,sdemt216$ENT == "08")
+
+estado$ANIOS_ESC  <- as.numeric(estado$ANIOS_ESC)
+estudios <- c(estado$ANIOS_ESC)
+
+estado$INGOCUP <- as.numeric(estado$INGOCUP)
+ingreso <- c(estado$INGOCUP)
+
+
+#Grafico de dispersiÓn
+plot (estudios, ingreso, pch= 3, xlab="Años de escolaridad", ylab="Ingreso mensual", main="Grafico de dispersion", col=20)
+
+#Correlaciones
+cor(estudios, ingreso, method="pearson")
+
+#Prueba de hipotesis
+cor.test(estudios, ingreso, method="pearson")
+#como p-value < 0.05, entonces hay relación
+
+#Aplicar el modelo
+mod1 <- lm(estudios~ingreso)
+summary(mod1)
+
+#Graficar nuevamente con recta ajustada
+plot (estudios, ingreso, pch= 3, xlab="Años de escolaridad", ylab="Ingreso mensual", main="Grafico de dispersion", col=20)
+abline(mod1)
