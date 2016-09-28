@@ -1,0 +1,43 @@
+# PracticasClase
+rm(list = ls())
+setwd("C://Users//SALA-E11//Desktop//sdemt215")
+
+require(foreign)
+SDEMT215.dbf <- data.frame(read.dbf("SDEMT215.dbf"))
+
+
+View(SDEMT215.dbf)
+install.packages("questionr")
+require(questionr)
+#FRECUENCIAS (ponderar y sin ponderar)
+
+wtd.table(SDEMT215.dbf$POS_OCU)
+wtd.table(SDEMT215.dbf$POS_OCU, na.show = TRUE)
+
+wtd.table(SDEMT215.dbf$SEX, SDEMT215.dbf$POS_OCU)
+wtd.table(SDEMT215.dbf$SEX, SDEMT215.dbf$POS_OCU, weights = SDEMT215.dbf$FAC)
+
+
+#EJERCICIO 
+#a) obtener la frecuencia de la variable clase 1( muestral )
+wtd.table( SDEMT215.dbf$CLASE1 )
+#b) Obtener el tabulado de entidad y sexo (muestral y ponderado)
+wtd.table(SDEMT215.dbf$ENT, SDEMT215.dbf$SEX)
+wtd.table(SDEMT215.dbf$ENT, SDEMT215.dbf$sex, weights =SDEMT215.dbf$FAC)
+
+ 
+#TABULADOS (etiquetar variables )
+
+SDEMT215.dbf$SEXO <- factor(SDEMT215.dbf$SEX, levels = c(1,2), labels=c("Hombre", "Mujer"))
+wtd.table(SDEMT215.dbf$SEX)
+wtd.table(SDEMT215.dbf$SEXO)
+
+View(SDEMT215.dbf)
+
+SDEMT215.dbf$POS_OCU <- factor(SDEMT215.dbf$POS_OCU, levels = c(1,2,3,4,5), labels = c("subordinados y renumerados","Empleadores", "Cuenta propia", "Sin pago", "NE" ))
+
+View(SDEMT215.dbf)
+
+wtd.table(SDEMT215.dbf$POS_OCU)
+
+wtd.table(SDEMT215.dbf$POS_OCU, SDEMT215.dbf$SEXO, weights = SDEMT215.dbf$FAC)
