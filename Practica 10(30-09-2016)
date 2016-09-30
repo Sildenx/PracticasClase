@@ -1,0 +1,56 @@
+# PracticasClase
+# Después del análisis gráfico:
+#Confirmar mrm cumple con los supuestos.
+#Generar los valores ajustados, residuales y estándarizados. 
+mochila$ajustados <-fitted(modmo)
+mochila$residuales <-residuals(modmo)
+sort(data.frame(precio))
+mochila$rstud <- rstudent(modmo)
+
+
+#---------------------------------------1) PRUEBA DE NORMALIDAD---------------------------------------------------
+install.packages("lmtest")
+require(lmtest)
+ks.test(mochila$rstud, "pnorm")
+#Se plantea un prueba de hipótesis y se espera un p-value >.5, de ser así no se rechaza Ho y se 
+#acepta que hay normalidad 
+#........................................2) HOMOGENIEDAD DE VARIANZAS...........................................
+bptest(modmo, studentize = FALSE, data = mochila)
+#Por lo tanto pasa la prueba de homogeneidad de varianzas 
+
+#.......................................3) PRUEBA DE AUTOCORRELACIÓN..........................................
+#La prueba se llama Durbin Watson 
+dwtest(modmo, alternative = "two.sided", data = mochila)
+#Comprobación 
+#a) El p-value mayor a .05
+#b) El valor de Durbin Watson (rango aceptable 1.5 a 2.5)
+
+#Hasta aquí podriamos confirmar que no hay correlación entre los residuos 
+#Se confirma que tenemos un modelo con buen ajuste; sin  embargo hay que revisar los casos atípicos 
+ install.packages("car")
+require(car)
+
+outlier.Test(modmo)
+# Observar los datos atípicos 
+#Conocer la inflouencia de estos casos 
+#En el modelo para observar estas influencias se utiliza 
+influ <- influence.measures(modmo)
+summary(influ)
+# Los casos más influyentes son 1, 2 y 10 
+#dfb: Indican la influencia en los coeficientes del modelo 
+#Las columnas que nos representan mayor interés son las cook .d y hat , que muestran mayor claridad la influencia 
+#de la observación en este caso la observación 10 es la que tiene mayor distancia de cook, en esta distancia los 
+#valores mayores a 1 hay certeza de que si influyen, en la columna de hat se asocia con las medidas de 
+#leverage que varían entre 0 y 1 
+#Entre mas cercano a 1 mayor influencia 
+
+#..................................ANÁLISIS GRÁFICO DE LA INFLUENCIA DE LAS OBSERVACIONES.....................
+influencePlot(modmo)
+#El análisis de este gráfico depende de las circunferencias que arroja, a mayor circunferencia mayor influencia. 
+#..................................GRÁFICA DE LA DISTANCIA DE COOK............................................
+install.packages("faraway")
+require(faraway)
+cooks.distance(modmo)
+dc <- cooks.distance(modmo)
+etiqueta <- rownames(mochila)
+halfnorm(dc, 3, etiqueta)
