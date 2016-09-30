@@ -1,0 +1,43 @@
+# PracticasClase
+#------------------------------------MODELO DE REGRESIÓN SIMPLE-----------------------------------------------------------------
+capa<-c(4330, 5500, 5500, 4700, 5200, 5500, 4700, 5500, 5800, 5000) #inde 
+calidad <-c(2,3,4,3,4,4,4,5,5,5) # independiente (x1)
+precio<-c(190, 219, 249,249,  250, 340, 289, 395, 439, 525) #dependiente (y)
+mochila1<- mochila[c(-1, -7, -10),]
+mochila2 <- mochila[, -2]
+
+mochila <-data.frame(precio, capa, calidad)
+#Primero aplicamos una correlación 
+cor(mochila, use = "everything", method = "pearson")
+#Observamos que las variables tienen correlaciones diversas 
+#aplicamos modelo 
+modmo <- lm(precio~calidad+capa)
+summary(modmo)
+#Se revisa la R2 ajustada por ser un mRM tenemos r2 ajustada de .70 lo que implica que la recta de regresión explica en 70% la 
+#variabilidad del modelo, revisando el valor F y p value tenemos que si cumple con los criterios de un buen ajuste (F>1 y pvalue <.05)
+#con estos datos podemos mencionar que estamos ante un buen modelo por lo que se pasa al diagnostico,éste se realiza para  poder 
+#generalizar los resultados del modelo a partir de la revision de los supuestos.
+#lo primero que se hace en un mrm es observar graficamente los supuestos, en primer lugar se contrastan los valores residuales
+#contra los valores ajustados y se realiza con la funcion plot  y el argumento wich=1
+#-----------------------------------------------------VARIANZA CONSTANTE-------------------------------------------------------
+plot(modmo, wwhich = 1, pch=3)
+#Una tendencia en la variabilidad de los residuos sugiere que la varianza está relacionada con la media , violando el 
+#supuesto de varianza constante 
+#---------------------------------------------------DISTRIBUCIÓN NORMAL----------------------------------------------------
+plot(modmo, which = 2, pch=3)
+
+#Se observa si hay distribución normal 
+
+#-----------------------------------------------TERCER SUPUESTO--------------------------------------------------------------
+#Los residuos están estandarizados por sus desviaciones estandar estimadas 
+plot(modmo, which = 3, pch=3)
+
+#--------------------------------------QUINTO MODELO-------------------------------------------------------------------------
+#Que impacto tiene cada observacion ene el modelo 
+plot(modmo, which = 5, pch=3)
+#En esta distancia el grafico nos muestra las observaciones, lo que nos sugiere eliminarlas o no
+#---------------------------------------------DATOS MODIFICADOS--------------------------------------------------------------
+cor(mochila1, use = "everything", method = "pearson")
+modmo1 <- lm(precio~calidad+capa, mochila1)
+plot(modmo1, which = 5, pch=3)
+summary(modmo1)
