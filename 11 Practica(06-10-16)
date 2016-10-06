@@ -1,0 +1,47 @@
+# PracticasClase
+plot (capa, precio, pch=12, xlab="Capa", ylab="Precio", main="Grafica de dispersion", col="blue")
+cor(precio, calidad, method = "pearson" )
+cor.test(precio, calidad, method = "pearson")
+# Comparacion de los modelos para seleccionar ¿Cuálm es el mejor?
+#Podemos seleccionar el mejor subconjunto de variables independendientes 
+#En este caso para la aplicacion del modelo del mrm tenemos dos variables 
+#independuientes (calidad y capacidad) por lo que se propone comparar los modelos 
+#Para aplicar el principio de parsimonia , conocer las variable sindependientes inescesarias 
+#evitar multicolinealidad, es decir, se tienen muchas variables trantando de explicar el modelo 
+#ante estas variables se pueden copmparar 3 modelos 
+#1) precio~ capacidad  
+#2) precio~ calidad 
+#3) precio~ calidad + capacidad 
+# ¿Cómo seleccionamos el mejor modelo?
+#*****************************CRITERIO DE INFORMACIÓN DE AKAIKE*********************************************
+#El problema de utilizar R cuadrada para comoparar modelos , esta medida siempre crece.
+#Viene definido por: 
+#AIC=(n)(log (SCR/n))+2k 
+#SCR= suma de cuadrados residuales 
+# n es el numero de casos en el modelo
+#k  numero de variables independientes 
+#El problema: el unico criterio para el AIC es si el AIC es mayor el modelo es peor 
+#el modelo mas recomendado es el método de step bystep 
+#Para R se utiliza la funcion step()
+#Dentro del método de step by step hay tres modalidades 
+#1) Forward : Parte del coeficiente de Bo y de ahí va probando las variables
+#2) Backward : R empieza con todas la variables 
+#3) both : Realiza test para conocer la vatriable indep menos util 
+
+cor(mochila, use = "everything", method = "pearson")
+modmo1<- lm(precio ~capa + calidad, data = mochila)
+summary(modmo1)
+step(modmo1, direction = "backward")
+
+# El metodo step analizo dos modelos 
+#1) precio~ capa+ calidad con un AIC =83.90
+#2) precio~ calidad  con un AIC =83.51
+
+# Ahora vamos a probar con el método both 
+step(modmo1, direction = "both")
+# Tenemos un resultado igual al de backward 
+ step(modmo1, direction = "forward")
+ 
+ #solo muestra el modelo completo pq inicia haciendo pruebas con el 
+ # modelo nulo y solo deja el modelo completo pq es el que mayor AIC muestra.... 
+ # En este caso nos quedamos con el mejor AIC que es el modelo de precio ~ calidad. 
