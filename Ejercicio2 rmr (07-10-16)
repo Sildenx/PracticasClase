@@ -1,0 +1,40 @@
+# PracticasClase
+#---------------------------EJERCICIO CLASE----------------------------------------------------------
+y<-c(25.5, 31.2, 25.9, 38.4, 18.4, 26.7, 26.4, 25.9, 32, 25.2, 39.7, 35.7, 26.5)
+x1 <-c(1.74,6.32,6.2,10.52,1.19,1.22,4.10,6.32,4.08,4.15,10.15,1.72,1.70)
+x2 <-c(5.30,5.42,8.41,4.63,11.60,5.85,6.62,8.72,4.42,7.60,4.83,3.12,5.3)
+x3 <-c(10.8,9.4,7.2,8.5,9.4,9.9,8,9.1,8.7,9.2,9.4,7.6,8.2)
+
+#a) analizar graficos de dispersion y pruebas de correlacion
+
+dat <-data.frame(y, x1, x2, x3)
+cor(dat, use = "everything", method="pearson")
+modat <- lm( y~ x1+ x2 + x3)
+plot(modat, which=1, pch=3, )
+
+#b) plantear la ecuacion estimada original, es decir con todas las variables
+summary(modat)
+
+#c) analizar la anova, r cuadrada, estadistico F (mediante p.h.)
+
+anova(modat)
+
+#d)comparen modelos con backward y analicen el modelo que genere la funcion step
+
+step(modat, direction = "backward")
+
+#e) Realizar la prueba de 3 supuestos a este modelo (kolmogrov- smirnov, breusch-pagan, durbin watson) 
+#analizar los datos arrojados 
+
+#a.1)
+
+dat1 <-data.frame(y, x1, x2)
+cor(dat1, use = "everything", method="pearson")
+modat1 <- lm( y~ x1+ x2)
+plot(modat1, which=1, pch=3)
+
+#a.2)
+
+summary(modat1)
+
+#a.3) Aplicar los supuestos 
