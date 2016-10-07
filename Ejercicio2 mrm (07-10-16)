@@ -38,3 +38,4 @@ plot(modat1, which=1, pch=3)
 summary(modat1)
 
 #a.3) Aplicar los supuestos 
+dwtest(modat1, alternative = "two.sided")
