@@ -1,5 +1,4 @@
 # PracticasClase
-#---------------------------EJERCICIO CLASE----------------------------------------------------------
 y<-c(25.5, 31.2, 25.9, 38.4, 18.4, 26.7, 26.4, 25.9, 32, 25.2, 39.7, 35.7, 26.5)
 x1 <-c(1.74,6.32,6.2,10.52,1.19,1.22,4.10,6.32,4.08,4.15,10.15,1.72,1.70)
 x2 <-c(5.30,5.42,8.41,4.63,11.60,5.85,6.62,8.72,4.42,7.60,4.83,3.12,5.3)
@@ -9,33 +8,76 @@ x3 <-c(10.8,9.4,7.2,8.5,9.4,9.9,8,9.1,8.7,9.2,9.4,7.6,8.2)
 
 dat <-data.frame(y, x1, x2, x3)
 cor(dat, use = "everything", method="pearson")
+#Las variables tienen correlaciones diversas. 
+
 modat <- lm( y~ x1+ x2 + x3)
 plot(modat, which=1, pch=3, )
 
 #b) plantear la ecuacion estimada original, es decir con todas las variables
 summary(modat)
+# La r cuadrada ajustada es de: .8825; la recta de regresión explica en 88.25% la variabilidad
+# del modelo. 
+# F=31.04 >1; pvalue= 4.46e-05 <.05: Se tiene un buen modelo, cumple con los criterios de un buen 
+#ajuste. 
+
 
 #c) analizar la anova, r cuadrada, estadistico F (mediante p.h.)
-
 anova(modat)
+# Se observa claramente que la variable dependiente x3 no tiene significancia. 
 
-#d)comparen modelos con backward y analicen el modelo que genere la funcion step
 
+#d)Comparen modelos con backward y analicen el modelo que genere la funcion step
 step(modat, direction = "backward")
+# El modelo que propone la función step es y~x1+x2, ya que la variable x3 no es significante en 
+#el modelo, es decir, la información que proporciona x3 la brindan x1 y x2. 
+
+# *******************Se realiza un análisis con el nuevo modelo: y~x1+x2***********************
+#1) analizar graficos de dispersion y pruebas de correlacion
+dat1 <-data.frame(y, x1, x2)
+cor(dat1, use = "everything", method="pearson"
+#Las variables tienen correlaciones diversas. 
+modat1 <- lm( y~ x1+ x2)
+plot(modat1, which=1, pch=3)
+
+#2) plantear la ecuacion estimada, es decir con  las variables x1 y x2. 
+summary(modat1)
+# Las variables del modelo son significativas 
+# La r cuadrada ajustada es de: .8905; la recta de regresión explica en 89.05% la variabilidad
+# del modelo. 
+# F=48.81 >1; pvalue= 6.319e-05 <.05: Se tiene un buen modelo, cumple con los criterios de un buen 
+#ajuste. 
+
+#3) Realizar el ANOVA. 
+anova(modat1)
+#Las variables son significativas. 
+
 
 #e) Realizar la prueba de 3 supuestos a este modelo (kolmogrov- smirnov, breusch-pagan, durbin watson) 
 #analizar los datos arrojados 
 
-#a.1)
+install.packages("lmtest")
+require(lmtest)
 
-dat1 <-data.frame(y, x1, x2)
-cor(dat1, use = "everything", method="pearson")
-modat1 <- lm( y~ x1+ x2)
-plot(modat1, which=1, pch=3)
 
-#a.2)
-
-summary(modat1)
-
-#a.3) Aplicar los supuestos 
+#-----PRUEBA DE DURBIN WATSON :PRUEBA DE AUTOCORRELACIÓN ---------------------------------------------------
 dwtest(modat1, alternative = "two.sided")
+# pvalue>.05
+# DW=1.4885 valor que no pertenece al rango (1.5, 2.5) por lo que no hay correlación entre los residuos. 
+
+
+#-----PRUEBA DE KOLMOGROV- SMIRNOV:PRUEBA DE NORMALIDAD  -----------------------------------------------------
+dat1$rstud <- rstudent(modat1)
+ks.test(dat1$rstud, "pnorm")
+#p value>.5 , se acepta que hay normalidad. 
+
+
+#----PRUEBA DE BREUSCH- PAGAN:HOMOGENIEDAD DE VARIANZAS -------------------------------------------------------
+bptest(modat1, studentize=FALSE, data=dat1 )
+#Por lo tanto pasa la prueba de homogeneidad de varianzas 
+
+#*******************************CONCLUCIONES********************************************************************
+# Se propuso un modelo de regresión  multivariable. A través de la correlación de pearson, ANOVA, 
+# el análisis de coeficientes , rcuadrada y valor de F se concluyó que la variable dependiente x3 
+#puede eliminarse del modelo, entonces se obtuvo un modelo con menor error de ajuste. 
+# Se elimino x3 de y~(x1+ x2+ x3) , se obtiene y~(x1+x2) 
+# Aunque ambos modelos son buenos la optimización de variables permite obtener información más exacta delos datos.
