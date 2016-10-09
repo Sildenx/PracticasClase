@@ -29,33 +29,49 @@ estrellas <- c(4, 3.5, 3.5, 3.5, 3.5, 3.5, 3, 3, 2.5, 2)
 #d)Elimine cualquiera de las variables independientes que no sea significativa para la ecuación
 #de regresión estimada. ¿Cuál es la ecuación de regresión estimada que recomienda? Com-
 # pare R 2 con el valor de R 2 para el inciso a). Analice las diferencias.
-#e) comparar los modelos y decir cual es el mejor segun el metodo step by step
+#e) comparar los modelos y decir cual es el mejor segun el metodo step.
 
 #A) 
-data.frame(operacion, uso, gama, estrellas)
+data.frame(estrellas, operacion, uso, gama )
 modmo <- lm(estrellas~uso+gama+operacion)
 summary(modmo)
-
 # Numero de estrellas dadas= y
+#intersección =.34510
 # Uso = x1
 # Gama = x2
 # Operación =x3
-# La ecuación de mrm: y= .13249x1 + .45852 x2 +.25482 x3
-# Se usa la r ajustada igual a: .8284, es decir, la recta de regresión explica en 82.84% la variabilidad del modelo. 
+# La ecuación de mrm: y= 0.34510+.13249x1 + .45852x2 +.25482x3
+# R cuadrada ajustada= 0.8284, es decir, la recta de regresión explica en 82.84% la variabilidad del modelo. 
 
-#*******************************************************************************************************************
+#B)****************************************************************************************************************
+anova(modmo)
+#Es un buen ajuste porque F>1, donde F=15.49 (Significancia global de la relación)
+confint(modmo, level = .95)
+#Con una probabilidad del 95%: 
+#x1 se encuentra en el intervalo (-0.21111775 0.4761017)
+#x2 se encuentra en el intervalo (0.15709301 0.7599449)
+#x3 se encuentra en el intervalo (0.04547563 0.4641685)
+#El modelo tiene un nivel de significancia del 95%. 
 
-#B)
-# Es un buen ajuste porque F>1, donde F=15.49
 
-#********************************************************************************************************************
-#C) 
-# Las variables con mayor significancia son Gama y operación, entonces se elimina la variable uso. 
+#C)********************************************************************************************************************
+#A través de summary(modmo) se sabe que las variables con mayor significancia son Gama y operación, entonces se elimina la variable uso. 
 #Se propone el nuevo modelo: 
-
 data.frame(estrellas, gama, operacion)
-
 modmo1 <- lm(estrellas~ gama + operacion)
 summary(modmo1)
+#R cuadrada ajustada= .8311; la recta de regresión explica en 83.11% la variabilidad del modelo.
+#modmo vs modmo1 
+#Rcuadrada(modmo)= 0.8284 < Rcuadrada(modmo1)=0.8311
+#El modelo explica mejor la variabilidad de estrellas eliminando la variable uso. 
+#Hay un aumento de F, por lo que hay un mejor ajuste. 
 
-# Hay un aumento de F, por lo que hay un mejor ajuste. 
+#D)*********************************************************************************************************************
+#Comparar modelo propuesto y modelo generado con la función step. 
+step(modmo, direction = "backward")
+# Con la función step se comprueba que el modelo explica mayor variabilidad en estrellas con  estrellas~gama + operación 
+# Correspondiente a la ecuación  y~.6718+.4853x2+.2641x3 
+
+
+
+
