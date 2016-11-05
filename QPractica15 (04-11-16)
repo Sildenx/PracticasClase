@@ -1,0 +1,25 @@
+# PracticasClase
+
+#Tabulados basicos predicciones estadisticas 
+#sdem precodificado 
+
+setwd("C://Users//DENN//Downloads")
+install.packages("foreign")
+require(foreign)
+
+install.packages("questionr")
+require(questionr)
+
+SDEMTINF <- data.frame(read.dbf("mti2013_05_17_sdem_precodificado.dbf"))
+
+wtd.table( SDEMTINF$T_LOC, weights = SDEMTINF$FAC_MTI)
+wtd.table(SDEMTINF$T_LOC, SDEMTINF$CLASE2, weights = SDEMTINF$FAC_MTI)
+
+#Poblacion objetivo: niños ocupados de zonas rurales 
+SDEMTINF1<- subset(SDEMTINF, SDEMTINF$CLASE2==1 & SDEMTINF$T_LOC==4)    
+
+wtd.table(SDEMTINF$SEX, weights = SDEMTINF$FAC_MTI)
+wtd.table(SDEMTINF$T_PER, weights = SDEMTINF$FAC_MTI)
+
+wtd.table(SDEMTINF1$SEX, weights = SDEMTINF1$FAC_MTI)
+wtd.table(SDEMTINF1$T_PER, weights = SDEMTINF1$FAC_MTI)
