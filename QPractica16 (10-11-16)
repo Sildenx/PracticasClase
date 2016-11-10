@@ -1,0 +1,28 @@
+# PracticasClase
+#--------------------------------PEGAR BASES-----------------------------------------------------
+
+install.packages("foreing")
+require (foreign)
+setwd("C://Users//SALA-C19//Downloads//enoe")
+install.packages("questionr")
+require(questionr)
+
+SDEM <- read.dbf("sdemt216.dbf")
+COE1 <- read.dbf("coe1t216.dbf")
+COE2 <- read.dbf("coe2t216.dbf")
+
+folio <- paste(SDEM$CD_A, SDEM$ENT, SDEM$CON, SDEM$V_SEL, SDEM$N_HOG, SDEM$N_HOG, SDEM$H_MUD, SDEM$N_REN)
+SDEMCONFOLIO <- data.frame(SDEM, folio)
+
+folio <- paste(COE1$CD_A,COE1$ENT, COE1$CON, COE1$V_SEL, COE1$N_HOG, COE1$N_HOG, COE1$H_MUD, COE1$N_REN )
+COE1CONFOLIO <- data.frame(COE1, folio)
+
+folio <- paste(COE2$CD_A,COE2$ENT, COE2$CON, COE2$V_SEL, COE2$N_HOG, COE2$N_HOG, COE2$H_MUD, COE2$N_REN )
+COE2CONFOLIO <- data.frame(COE2, folio)
+
+TOTAL <- merge(SDEMCONFOLIO, COE1CONFOLIO, by="folio", all.x =TRUE)
+ENOETOTAL <- merge(TOTAL, COE2CONFOLIO, by="folio", all.x = TRUE)
+
+wtd.table(ENOETOTAL$SEX, ENOETOTAL$P1, weights = ENOETOTAL$FAC)
+wtd.table(ENOETOTAL$SEX, ENOETOTAL$P1)
+sum(wtd.table(ENOETOTAL$EDA.x, weights = ENOETOTAL$FAC.x))
