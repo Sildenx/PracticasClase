@@ -1,0 +1,50 @@
+# PracticasClase
+install.packages("foreign")
+require (foreign)
+install.packages("questionr")
+require (questionr)
+
+setwd("C://Users//Sala-C27/Downloads")
+SDEMINF <- data.frame(read.dbf("mti2015_05_17_sdem_precodificado.DBF"))
+
+#"T_PER": persona para la que trabaja 
+#1 Es un familiar 
+#2 No es un familiar 
+#3 Trabaja solo o por su cuenta 
+#4 No especificado 
+
+#T_LOC : 
+#1Localidades  mayores de 100, 000 habitantes 
+#2Localidaes de 15 000 habitantes a 99 999 habitantes 
+#3 Localidades de 2500 habitantes a 14999 habitantes 
+#4Localidades menores a 2500 habitantes 
+
+
+
+SDEMINF_LOCURB <- data.frame (subset(SDEMINF,SDEMINF$T_LOC==1 |SDEMINF$T_LOC==2| SDEMINF$T_LOC==3))
+SDEMURB <- subset(SDEMINF_LOCURB, weights = SDEMINF$FAC_MTI)
+
+wtd.table(SDEMINF_LOCURB$T_PER==1)
+wtd.table(SDEMINF_LOCURB$T_PER==2)
+wtd.table(SDEMINF_LOCURB$T_PER==3)
+
+wtd.table(SDEMINF_LOCURB$T_LOC, weights=SDEMINF_LOCURB$FAC_MTI)
+
+CUE1<- data.frame(read.dbf("mti2015_12_17_cuestionario_basico.DBF"))
+CUE2 <- data.frame(read.dbf("mti2015_05_11_cuestionario_basico.DBF"))
+
+
+folio <- paste(SDEMINF_LOCURB$CON, SDEMINF_LOCURB$ENT, SDEMINF_LOCURB$V_SEL, SDEMINF_LOCURB$N_HOG, SDEMINF_LOCURB$H_MUD, SDEMINF_LOCURB$N_REN, SDEMINF_LOCURB$CD_A)
+ x <- data.frame(SDEMINF_LOCURB,folio)
+ 
+
+ 
+ folio <-paste(CUE1$CON, CUE1$ENT, CUE1$V_SEL, CUE1$N_HOG, CUE1$H_MUD, CUE1$N_REN, CUE1$CD_A)
+ y <- data.frame(CUE1, folio)
+
+ 
+ folio <- paste(CUE2$CON, CUE2$ENT, CUE2$V_SEL, CUE2$N_HOG, CUE2$H_MUD, CUE2$N_REN, CUE2$CD_A)
+ z <- data.frame(CUE2, folio)
+ 
+ total <- merge(x,y, by="folio", all.x = TRUE)
+ MTITOTAL <- merge(total, z, by="folio", all.x = TRUE)
