@@ -1,0 +1,60 @@
+# PracticasClase
+install.packages("foreign")
+require(foreign)
+
+install.packages("questionr")
+require(questionr)
+
+setwd("C://Users//SALA-C19//Downloads")
+RURAL <- data.frame(read.spss("solorural.sav"))
+
+#POBLACIÓN DE 5 A 17 AÑOS MUESTRA 
+ls(RURAL)
+wtd.table(RURAL$eda)
+
+
+wtd.table(RURAL$eda & RURAL$sex=="hombres")
+wtd.table(RURAL$eda & RURAL$sex=="mujeres")
+ 
+
+#TAMAÑO DE LA POBLACIÓN 
+
+wtd.table(RURAL$eda & RURAL$sex=="hombres", weights = RURAL$fac_mti)
+wtd.table(RURAL$eda & RURAL$sex=="mujeres", weights = RURAL$fac_mti)
+
+#OCUPADOS 
+
+hocu <- subset(RURAL, RURAL$sex=="hombres" & RURAL$c_ocu==1)
+mocu <- subset(RURAL, RURAL$sex=="hombres" & RURAL$c_ocu==1)
+
+
+#OCUPADOS POR GRUPO DE EDAD 
+
+h59<- subset(RURAL, RURAL$eda19c==3 & RURAL$sex=="hombres")
+h1013<- subset(RURAL, RURAL$eda19c==4 | RURAL$eda==5 & RURAL$sex=="hombres")
+
+m59<- subset(RURAL, RURAL$eda19c==3 & RURAL$sex=="mujeres")
+m1013<- subset(RURAL, RURAL$eda19c==4 | RURAL$eda==5 & RURAL$sex=="mujeres")
+
+
+
+#OCUPADOS SEGUN ASISTENCIA ESCOLAR 
+
+ha <- subset(RURAL, RURAL$asis==1 & RURAL$sex=="hombres")
+ma <- subset(RURAL, RURAL$asis==1 & RURAL$sex=="mujeres")
+
+#CARACTERÍSTICAS DEL HOGAR 
+
+hth13 <- subset(RURAL, RURAL$tam_hog==1 & RURAL$sex=="hombres")
+mth13 <- subset(RURAL, RURAL$tam_hog==1 & RURAL$sex=="mujeres")
+
+hth45 <- subset(RURAL, RURAL$tam_hog==2 & RURAL$sex=="hombres")
+mth45 <- subset(RURAL, RURAL$tam_hog==2 & RURAL$sex=="mujeres")
+
+hth67 <- subset(RURAL, RURAL$tam_hog==3 & RURAL$sex=="hombres")
+mth67 <- subset(RURAL, RURAL$tam_hog==3 & RURAL$sex=="hombres")
+
+
+
+hth8+ <- subset(RURAL, RURAL$tam_hog==4 & RURAL$sex=="hombres")
+mth8+ <- subset(RURAL, RURAL$tam_hog==4 & RURAL$sex=="mujeres")
