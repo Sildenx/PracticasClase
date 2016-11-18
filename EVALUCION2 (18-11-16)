@@ -1,0 +1,48 @@
+# PracticasClase
+install.packages("foreign")
+require(foreign)
+
+install.packages("questionr")
+require(questionr)
+
+setwd("C://Users//SALA-C19//Downloads")
+RURAL <- data.frame(read.spss("solorural.sav"))
+
+RURALOCUPADOS <- data.frame(subset(RURAL, RURAL$c_ocu=="ocupado"))
+
+#Variable dependiente: t_per
+#Variables independientes: sex, eda1, asis, sex_jefe, escol_jefe, t_apo1, ocu_jefe. 
+# Las categorías de t_per: 1,2,3,4
+
+
+install.packages("plyr")
+require(plyr)
+
+RURALOCUPADOS$t_per <- revalue(factor(RURALOCUPADOS$t_per), c("4"=NA))
+table(RURALOCUPADOS$t_per)
+RURALOCUPADOS$t_per <- factor(RURALOCUPADOS$t_per, levels = c(1,2,3), labels = c("Familiar", "No familiar", "Cuenta propia"))
+table(RURALOCUPADOS$sex)
+table(RURALOCUPADOS$eda1)
+RURALOCUPADOS$eda1 <- factor(RURALOCUPADOS$eda1, levels = c(1,2,3), labels = c("5 a 9 ", "10 a 13", "14 a 17"))
+table(RURALOCUPADOS$asis)
+table(RURALOCUPADOS$sex_jefe)
+table(RURALOCUPADOS$escol_jefe)
+RURALOCUPADOS$escol_jefe <- revalue(factor(RURALOCUPADOS$escol_jefe), c("No especificado"=NA))
+table(RURALOCUPADOS$t_apo1)
+table(RURALOCUPADOS$ocu_jefe)
+
+wtd.table(RURALOCUPADOS$t_per)
+
+#................................................MODELO DE REGRESIÓN LOGÍATICA ................................................
+require(nnet)
+MODLOG <- multinom(RURALOCUPADOS$t_per ~1, data = RURALOCUPADOS)
+MODLOG <- multinom(t_per~1, data = RURALOCUPADOS)
+MODFIN <- multinom(t_per ~ sex + eda1+ asis+ sex_jefe +escol_jefe, data = RURALOCUPADOS)
+g <- summary(MODFIN, Wald=T)
+print(g)
+
+# paqutería stargazer 
+install.packages("stargazer")
+require(stargazer)
+formato <- stargazer(MODFIN, type = "html", title = "coefficients", summary = T)
+stargazer(MODFIN, type = "text", title = "mlogit", summary =T, digits = 2, out ="C://Users//SALA-C19//Downloads//mlogit")
