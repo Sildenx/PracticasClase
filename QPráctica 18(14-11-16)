@@ -1,0 +1,19 @@
+# PracticasClase
+install.packages("foreign")
+require(foreign)
+
+install.packages("questionr")
+require(questionr)
+install.packages("plyr")
+require(plyr)
+
+setwd("C://Users//SALA-C19//Downloads")
+
+RURAL2015 <- data.frame(read.dbf("mti2015_05_17_sdem_precodificado.DBF"))
+
+RURALOCUPADOS$t_per <- revalue(factor(RURALOCUPADOS$t_per), c("4"=NA))
+RURAL2015$C_OCU <- revalue(factor(RURAL2015$C_OCU), c("1"="2"))
+RURAL2015$C_OCU <- revalue(factor(RURAL2015$C_OCU), c("3"="2"))
+table(RURAL2015$C_OCU)
+
+RURAL2015OCU<- subset(RURAL2015, RURAL2015$C_OCU==2)
