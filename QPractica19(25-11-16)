@@ -1,0 +1,161 @@
+# PracticasClase
+install.packages("foreign")
+require(foreign)
+
+install.packages("questionr")
+require(questionr)
+
+install.packages("plyr")
+require(plyr)
+
+
+setwd("C://Users//Sala-C20.RTIC-C20-HP//Desktop//mti2015_bases_conapo_dbf")
+
+SDEMINF <- data.frame(read.dbf("mti2015_05_17_sdem_precodificado.DBF"))
+
+
+SDEMINF_LOCURB <- data.frame (subset(SDEMINF,SDEMINF$T_LOC==1 |SDEMINF$T_LOC==2| SDEMINF$T_LOC==3))
+SDEMURB <- subset(SDEMINF_LOCURB, weights = SDEMINF$FAC_MTI)
+
+table(RURAL2015OCU$T_PER)
+
+wtd.table(SDEMINF_LOCURB$T_PER==1)
+wtd.table(SDEMINF_LOCURB$T_PER==2)
+wtd.table(SDEMINF_LOCURB$T_PER==3)
+
+wtd.table(SDEMINF_LOCURB$T_LOC, weights=SDEMINF_LOCURB$FAC_MTI)
+
+CUE1<- data.frame(read.dbf("mti2015_12_17_cuestionario_basico.DBF"))
+CUE2 <- data.frame(read.dbf("mti2015_05_11_cuestionario_basico.DBF"))
+
+
+folio <- paste(SDEMINF_LOCURB$CON, SDEMINF_LOCURB$ENT, SDEMINF_LOCURB$V_SEL, SDEMINF_LOCURB$N_HOG, SDEMINF_LOCURB$H_MUD, SDEMINF_LOCURB$N_REN, SDEMINF_LOCURB$CD_A)
+x <- data.frame(SDEMINF_LOCURB,folio)
+
+
+
+folio <-paste(CUE1$CON, CUE1$ENT, CUE1$V_SEL, CUE1$N_HOG, CUE1$H_MUD, CUE1$N_REN, CUE1$CD_A)
+y <- data.frame(CUE1, folio)
+
+
+folio <- paste(CUE2$CON, CUE2$ENT, CUE2$V_SEL, CUE2$N_HOG, CUE2$H_MUD, CUE2$N_REN, CUE2$CD_A)
+z <- data.frame(CUE2, folio)
+
+total <- merge(x,y, by="folio", all.x = TRUE)
+MTITOTAL <- merge(total, z, by="folio", all.x = TRUE)
+
+
+Urbana <- data.frame (subset(MTITOTAL,MTITOTAL$T_LOC==1 |MTITOTAL$T_LOC==2| MTITOTAL$T_LOC==3))
+SDEMURBANA <- subset(Urbana, weights = Urbana$FAC_MTI)
+
+trabajadores <- data.frame (subset(Urbana,Urbana$C_OCU==2))
+trab <- subset(trabajadores, weights = trabajadores$FAC_MTI)
+
+#2-> OCUPADA
+#4-> NO OCUPADA
+
+install.packages("nnet")
+require(nnet)
+model <- multinom(T_PER~1, data=trab)
+
+# weights:  6 (2 variable)
+#initial  value 5830.335416 
+#iter  10 value 4487.151018
+#iter  10 value 4487.151018
+#iter  10 value 4487.151018
+#final  value 4487.151018 
+#converged
+
+modefin <- multinom(T_PER~ SEX + EDA1 + ASIS + T_APO1, data=trab)
+# weights:  18 (10 variable)
+#initial  value 798.691134 
+#iter  10 value 530.289977
+#iter  20 value 504.063747
+#iter  30 value 504.013497
+#iter  40 value 503.997190
+#final  value 503.996956 
+#converged
+g <- summary(modefin, wald = T)
+print(g)
+
+#Call:
+ # multinom(formula = T_PER ~ SEX + EDA1 + ASIS + T_APO1, data = trab)
+
+#Coefficients:
+ # (Intercept) SEXMujeres       EDA1       ASIS     T_APO1
+#No familiar     -3.325219 -0.3781852  0.5444085   1.288636 -0.1517402
+#Cuenta propia    8.865124  0.6539904 -0.3680743 -10.202939 -0.1286432
+
+#Std. Errors:
+ # (Intercept) SEXMujeres      EDA1      ASIS     T_APO1
+#No familiar     0.7182335  0.2348123 0.2325640 0.5887044 0.06594464
+#Cuenta propia   0.2294744  0.2473138 0.2473997 0.2294755 0.07235061
+
+#Residual Deviance: 1007.994 
+#AIC: 1027.994 
+
+install.packages("stargazer")
+require(stargazer)
+s <- stargazer(modefin, type = "html", title = "coefficients", summary = T)
+stargazer(modefin, type="text",apply.coef = exp,apply.se = exp, title = "mlogit", digits = 2, out = "C:\\Users\\Sala-C20.RTIC-C20-HP\\Desktop\\modelo.txt")
+
+
+exp(.54)
+
+
+######################################################################################################
+
+table(MTITOTAL$T_PER)
+#0     1     2     3     4 
+#71025  2749  2311   247     1 
+
+MTITOTAL$T_PER <- revalue(factor(MTITOTAL$T_PER), c("4"=NA))
+table(MTITOTAL$T_PER)
+
+MTITOTAL$T_PER <- revalue(factor(MTITOTAL$T_PER), c("0"=NA))
+table(MTITOTAL$T_PER)
+
+MTITOTAL$T_PER <- revalue(factor(MTITOTAL$T_PER), c("1"= "Familiar", "2"= "No familiar", "3"= "Cuenta propia"))
+persona <- wtd.table(MTITOTAL$T_PER, weights = MTITOTAL$FAC_MTI)
+persona
+
+#Familiar   No familiar Cuenta propia 
+#172456         25293         14582 
+
+MTITOTAL$SEX <- revalue(factor(MTITOTAL$SEX), c("1"= "Hombres", "2"= "Mujeres"))
+sexo <- wtd.table(MTITOTAL$SEX, weights = MTITOTAL$FAC_MTI)
+sexo
+
+#Hombres Mujeres 
+#5748812 5632140 
+
+asistencia <- wtd.table(ocup$asis, weights = ocup$fac_mti)
+asistencia
+
+MTITOTAL$C_OCU <- revalue(factor(MTITOTAL$C_OCU), c("1"="2"))
+MTITOTAL$C_OCU <- revalue(factor(MTITOTAL$C_OCU), c("3"="2"))
+table(MTITOTAL$C_OCU)
+
+RURAL2015OCU<- subset(MTITOTAL, MTITOTAL$C_OCU==2)
+
+#Variable dependiente t_per (Persona para la que trabaja)
+#Variables independientes :sex, eda1, asis, sex_jefe, escol_jefe, t_apo1, ocu_jefe
+
+
+RURAL2015OCU$T_PER <- factor(RURAL2015OCU$T_PER, levels = c(1,2,3), labels = c("Familiar", "No familiar", "Cuenta propia"))
+table(RURAL2015OCU$T_PER)
+RURAL2015OCU$SEX <- factor(RURAL2015OCU$SEX, levels = c(1,2), labels = c("Hombre", "Mujer"))
+table(RURAL2015OCU$SEX)
+
+table(RURAL2015OCU$EDA1)
+class(RURAL2015OCU$EDA1)
+RURAL2015OCU$EDA1 <- as.character(RURAL2015OCU$EDA1)
+class(RURAL2015OCU$EDA1)
+RURAL2015OCU$EDA1 <- as.factor(RURAL2015OCU$EDA1)
+class(RURAL2015OCU$EDA1)
+
+RURAL2015OCU$EDA1 <- factor(RURAL2015OCU$EDA1, levels = c(1,2,3), labels = c("5 A 9", "10 a 14", "15 a 17"))
+table(RURAL2015OCU$EDA1)
+
+RURAL2015OCU$ASIS <- factor(RURAL2015OCU$ASIS, levels = c(1,2), labels = c("Asiste", "No asiste"))
+table(RURAL2015OCU$ASIS)
